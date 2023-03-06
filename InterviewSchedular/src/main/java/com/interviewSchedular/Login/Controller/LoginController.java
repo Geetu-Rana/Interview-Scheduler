@@ -17,9 +17,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.interviewSchedular.Login.model.ERole;
+import com.interviewSchedular.Login.model.Role;
+import com.interviewSchedular.Login.model.User;
 import com.interviewSchedular.Login.repository.RoleRepository;
 import com.interviewSchedular.Login.repository.UserRepository;
 import com.interviewSchedular.Login.request.LoginRequest;
+import com.interviewSchedular.Login.request.SignUpRequest;
+import com.interviewSchedular.Login.response.MessageResponse;
 import com.interviewSchedular.Login.response.UserInfoResponse;
 import com.interviewSchedular.Login.security.Jwt.JwtUtils;
 import com.interviewSchedular.Login.security.Service.UserDetailsImpl;
@@ -33,7 +38,7 @@ public class LoginController {
 
 	private UserRepository userRepository;
 	
-	private RoleRepository repository;
+	private RoleRepository roleRepository;
 	
 	private PasswordEncoder encoder;
 	
@@ -45,7 +50,7 @@ public class LoginController {
 		super();
 		this.authenticationManager = authenticationManager;
 		this.userRepository = userRepository;
-		this.repository = repository;
+		this.roleRepository = repository;
 		this.encoder = encoder;
 		this.jwtUtils = jwtUtils;
 	}
@@ -61,6 +66,56 @@ public class LoginController {
 		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), new HashSet<>(roles)));
 	}
 	
+	@PostMapping("/signup")
+	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest){
+		
+		if(userRepository.existsByUsername(signUpRequest.getUserName())) {
+			return ResponseEntity.badRequest().body(new MessageResponse(" Error: UserName Already taken"));
+		}
+		if(userRepository.existsByEmail(signUpRequest.getEmail())) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Error email Allready Exist"));
+		}
+		
+		User user = new User(signUpRequest.getUserName(),
+				signUpRequest.getEmail(),
+				encoder.encode(signUpRequest.getPassword()));
+		Set<String> strRoles = signUpRequest.getRoles();
+		Set<Role> roles = new HashSet<>();
+		
+		if(strRoles == null) {
+			Role userRole = new Role(ERole.USER);
+			roles.add(userRole);
+			
+		}else {
+			strRoles.forEach(role ->{
+					switch(role) {
+					case "admin":
+						Role adminRole = new Role(ERole.ADMIN);
+						roles.add(adminRole);
+						break;
+					case "mod":
+						Role employerRole = new Role(ERole.EMPLOYER);
+						roles.add(employerRole);
+						break;
+					default:
+						Role userRole = new Role(ERole.USER);
+						roles.add(userRole);
+						break;
+					}
+					
+			});
+		}
+		user.setRole(roles);
+		userRepository.save(user);
+		
+		return ResponseEntity.ok(new MessageResponse("User Registered Successfully"));
+	}
 	
+	@PostMapping("signout")
+	public ResponseEntity<?> logoutUser(){
+		ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
+		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
+				.body(new MessageResponse("Logged Out SuccessFully"));
+	}
 	
 }

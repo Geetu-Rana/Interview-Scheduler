@@ -18,12 +18,14 @@ import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Users", uniqueConstraints = {
 		@UniqueConstraint(columnNames = "userName"),
 		@UniqueConstraint(columnNames = "email")
 })
+@NoArgsConstructor
 @Data
 public class User {
 	@Id
@@ -43,4 +45,9 @@ public class User {
 		inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> role;
 	
+	  public User(String username, String email, String password) {
+		    this.userName = username;
+		    this.email = email;
+		    this.password = password;
+		  }
 }

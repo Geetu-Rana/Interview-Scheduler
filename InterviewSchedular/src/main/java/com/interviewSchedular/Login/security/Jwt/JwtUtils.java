@@ -47,7 +47,15 @@ public class JwtUtils {
 		return cookie;
 	}
 	
+	public ResponseCookie getCleanJwtCookie() {
+		
+		ResponseCookie cookie = ResponseCookie.from(jwtCookie,null).path("/api").build();
+		return cookie;
+	}
 	
+	public String getUserNameFromJwtToken(String token) {
+		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+	}
 	public boolean vlidateJwtToken(String authToken) {
 		try {
 			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);

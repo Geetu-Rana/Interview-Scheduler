@@ -21,7 +21,7 @@ public class WebSecurityConfig {
 	
 	@Autowired
 	private UserDetailsServiceImpl userDetailsServiceImpl;
-	
+	@Autowired
 	private AuthEntryPointJwt unauthorizedHandler;
 	
 	@Bean
@@ -50,12 +50,13 @@ public class WebSecurityConfig {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 		http.cors().and().csrf().disable()
 		.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and().authorizeRequests().requestMatchers("/api/test/**").permitAll()
+		.and().authorizeHttpRequests().requestMatchers("/api/test/**").permitAll()
 		.requestMatchers("/api/test/**").permitAll()
 		.anyRequest().authenticated();
 		

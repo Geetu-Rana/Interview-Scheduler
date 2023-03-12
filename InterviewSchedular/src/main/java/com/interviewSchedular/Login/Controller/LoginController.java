@@ -38,8 +38,6 @@ public class LoginController {
 
 	private UserRepository userRepository;
 	
-	private RoleRepository roleRepository;
-	
 	private PasswordEncoder encoder;
 	
 	private JwtUtils jwtUtils;
@@ -50,7 +48,6 @@ public class LoginController {
 		super();
 		this.authenticationManager = authenticationManager;
 		this.userRepository = userRepository;
-		this.roleRepository = repository;
 		this.encoder = encoder;
 		this.jwtUtils = jwtUtils;
 	}

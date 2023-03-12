@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.interviewSchedular.Login.security.Jwt.AuthEntryPointJwt;
 import com.interviewSchedular.Login.security.Jwt.AuthTokenFilter;
@@ -26,9 +27,7 @@ public class WebSecurityConfig {
 	
 	@Bean
 	public AuthTokenFilter authenticationJwtTokenFilter() {
-	
 		return new AuthTokenFilter();
-		
 	}
 	
 	@Bean
@@ -59,6 +58,9 @@ public class WebSecurityConfig {
 		.and().authorizeHttpRequests().requestMatchers("/api/test/**").permitAll()
 		.requestMatchers("/api/test/**").permitAll()
 		.anyRequest().authenticated();
+		
+		http.authenticationProvider(authenticationProvider());
+		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 		
 		return http.build();
 	}

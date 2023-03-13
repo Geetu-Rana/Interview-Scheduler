@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
+import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 import com.interviewSchedular.Login.security.Service.UserDetailsImpl;
 
@@ -17,6 +18,8 @@ import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+
+@Component
 
 public class JwtUtils {
 	
@@ -34,6 +37,7 @@ public class JwtUtils {
 	public String getJwtFromCookies(HttpServletRequest request) {
 		Cookie cookie = WebUtils.getCookie(request, jwtCookie);
 		if(cookie != null) {
+		//	System.out.println(cookie.getValue());
 			return cookie.getValue();
 		}else {
 			return null;
@@ -43,19 +47,23 @@ public class JwtUtils {
 	
 	public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
 		String jwt = generateTokenFromUserName(jwtCookie);
-		ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt).path("/api").maxAge(24*60*60).httpOnly(true).build();
+		ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt)
+				.path("/api").maxAge(24*60*60).httpOnly(true).build();
 		return cookie;
 	}
 	
 	public ResponseCookie getCleanJwtCookie() {
 		
-		ResponseCookie cookie = ResponseCookie.from(jwtCookie,null).path("/api").build();
+		ResponseCookie cookie = ResponseCookie.from(jwtCookie,null)
+				.path("/api").build();
 		return cookie;
 	}
 	
 	public String getUserNameFromJwtToken(String token) {
-		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+		return Jwts.parser().setSigningKey(jwtSecret)
+				.parseClaimsJws(token).getBody().getSubject();
 	}
+	
 	public boolean vlidateJwtToken(String authToken) {
 		try {
 			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);

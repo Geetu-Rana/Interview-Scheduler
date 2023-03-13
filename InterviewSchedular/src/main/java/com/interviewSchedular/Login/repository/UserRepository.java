@@ -8,9 +8,9 @@ import com.interviewSchedular.Login.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 	
-	Optional<User> findByUsername(String username);
+	Optional<User> findByUserName(String username);
 
-  	Boolean existsByUsername(String username);
+  	Boolean existsByUserName(String username);
 
   	Boolean existsByEmail(String email);
 }

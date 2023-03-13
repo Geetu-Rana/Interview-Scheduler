@@ -43,6 +43,6 @@ public class Interview {
 	private Interviewer interviewer;
 	
 	@OneToMany
-	@JoinColumn(name = "Interviewee_Id")
+	@JoinColumn(name = "candidate_Id")
 	private Set<Interviewee> interviewees;
 }

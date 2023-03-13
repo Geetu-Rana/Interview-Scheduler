@@ -8,8 +8,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/all")
+@RequestMapping("api/test")
 public class TestController {
+	
+	@GetMapping("/all")
+	public String publicData() {
+		return "public data";
+	}
 	
 	@GetMapping("/user")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATORE') or hasRole('ADMIN')")

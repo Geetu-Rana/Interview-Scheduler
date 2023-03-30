@@ -28,17 +28,21 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 		// TODO Auto-generated method stub
 		logger.error("Unauthorized error: {} ", authException.getMessage());
 		
-		response.setContentType( MediaType.APPLICATION_JSON_VALUE );
+		response.setContentType( MediaType.APPLICATION_JSON_VALUE);
+		
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		
 		Map<String, Object> body = new HashMap<>();
-		body.put("Status", HttpServletResponse.SC_UNAUTHORIZED);
+		
+		body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
 		body.put("error", "Unauthorized");
 		body.put("message", authException.getMessage());
 		body.put("path", request.getServletPath());
 		
 		ObjectMapper mapper = new ObjectMapper();
+		
 		mapper.writeValue(response.getOutputStream(), body);
+		
 	}
 
 }

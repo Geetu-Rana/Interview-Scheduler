@@ -53,10 +53,15 @@ public class LoginController {
 	
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
+		
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword()));
+		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
 		UserDetailsImpl userDetails = (UserDetailsImpl)authentication.getPrincipal();
+		
 		ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+		
 		List<String> roles = userDetails.getAuthorities().stream().map(obj-> obj.getAuthority()).toList();
 		
 		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), new HashSet<>(roles)));
@@ -72,29 +77,34 @@ public class LoginController {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error email Allready Exist"));
 		}
 		
-		User user = new User(signUpRequest.getUserName(),
-				signUpRequest.getEmail(),
-				encoder.encode(signUpRequest.getPassword()));
+		
 		Set<String> strRoles = signUpRequest.getRoles();
 		Set<Role> roles = new HashSet<>();
-		
+		User user = new User();
+		user.setEmail(signUpRequest.getEmail());
+		user.setPassword(signUpRequest.getPassword());
+		user.setUserName(signUpRequest.getUserName());
 		if(strRoles == null) {
-			Role userRole = new Role(ERole.USER);
+			Role userRole = new Role();
+			userRole.setName(ERole.USER);
 			roles.add(userRole);
 			
 		}else {
 			strRoles.forEach(role ->{
 					switch(role) {
 					case "admin":
-						Role adminRole = new Role(ERole.ADMIN);
+						Role adminRole = new Role();
+						adminRole.setName(ERole.ADMIN);
 						roles.add(adminRole);
 						break;
 					case "mod":
-						Role employerRole = new Role(ERole.EMPLOYER);
+						Role employerRole = new Role();
+						employerRole.setName(ERole.EMPLOYER);
 						roles.add(employerRole);
 						break;
 					default:
-						Role userRole = new Role(ERole.USER);
+						Role userRole = new Role();
+						userRole.setName(ERole.USER);
 						roles.add(userRole);
 						break;
 					}
@@ -107,15 +117,15 @@ public class LoginController {
 		return ResponseEntity.ok(new MessageResponse("User Registered Successfully"));
 	}
 	
-	@PostMapping("signout")
+	@PostMapping("/signout")
 	public ResponseEntity<?> logoutUser(){
 		ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
 		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
 				.body(new MessageResponse("Logged Out SuccessFully"));
 	}
 	
-	@GetMapping("hello")
-	public ResponseEntity<String> getData(){
+	@GetMapping("/hello")
+	public ResponseEntity<String> getData(){ 
 		return new ResponseEntity<String>("Hello",HttpStatus.ACCEPTED);
 	}
 	

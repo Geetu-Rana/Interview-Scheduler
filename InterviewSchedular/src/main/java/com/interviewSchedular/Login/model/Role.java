@@ -1,11 +1,14 @@
 package com.interviewSchedular.Login.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -19,11 +22,10 @@ public class Role {
 	
 	@Enumerated(EnumType.STRING)
 	private ERole name;
-
-	public Role(ERole name) {
-		super();
-		this.name = name;
-	}
+	
+	@JsonIgnore
+	@ManyToOne
+	private User user;
 	
 	
 }

@@ -1,8 +1,14 @@
 package com.interviewSchedular.Login.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.hibernate.validator.constraints.UniqueElements;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonEncoding;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -13,6 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
@@ -35,19 +42,14 @@ public class User {
 	@UniqueElements
 	private String userName;
 	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	
 	@Email
 	private String email;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-		@JoinTable(name = "user_Roles", joinColumns = @JoinColumn(name = "user_id"),
-		inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> role;
+	@OneToMany(cascade =  CascadeType.ALL, mappedBy =  "user", fetch = FetchType.EAGER)
+	private Set<Role> role = new HashSet<>();
 	
-	  public User(String username, String email, String password) {
-		    this.userName = username;
-		    this.email = email;
-		    this.password = password;
-		  }
+	
 }

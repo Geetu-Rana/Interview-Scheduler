@@ -3,6 +3,8 @@ package com.interviewSchedular.Model;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,10 +42,14 @@ public class Interview {
 	private LocalDateTime EndingDateTime;
 	
 	@OneToOne(cascade = CascadeType.ALL)
+	@NotNull
 	private Interviewer interviewer;
 	
 	@OneToMany
 	@JoinColumn(name = "candidate_Id")
+	@JsonIgnore
 	private Set<Interviewee> interviewees;
 	
+	
+	private Boolean deleteState;
 }

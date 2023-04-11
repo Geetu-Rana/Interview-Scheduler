@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.interviewSchedular.Exceptions.InterviewException;
 import com.interviewSchedular.Model.Interview;
 import com.interviewSchedular.Service.InterviewImpl;
+import com.interviewSchedular.Service.InterviewServImp;
 
 import jakarta.validation.Valid;
 
@@ -24,7 +25,7 @@ public class InterviewController {
 	private InterviewImpl ivServ;
 	
 	@Autowired
-	public InterviewController(InterviewImpl ivServ) {
+	public InterviewController(InterviewServImp ivServ) {
 		// TODO Auto-generated constructor stub
 		this.ivServ = ivServ;
 	}

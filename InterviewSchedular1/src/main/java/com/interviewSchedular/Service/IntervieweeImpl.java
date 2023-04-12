@@ -15,7 +15,7 @@ public interface IntervieweeImpl {
 	
 	public Interviewee updateInterviewee(Interviewee interviewee) throws IntervieweeException;
 	
-	public Interviewee deleInterviewee(Interviewee interviewee) throws IntervieweeException;
+	public Interviewee deleInterviewee(Long id) throws IntervieweeException;
 	
 	public List<Interviewee> getAllInterviewees() throws IntervieweeException;
 	

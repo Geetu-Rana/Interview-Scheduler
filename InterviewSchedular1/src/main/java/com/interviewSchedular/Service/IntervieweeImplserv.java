@@ -52,8 +52,8 @@ public class IntervieweeImplserv implements IntervieweeImpl{
 	}
 
 	@Override
-	public Interviewee deleInterviewee(Interviewee interviewee) throws IntervieweeException {
-		Optional<Interviewee> opt = ivRepo.findById(interviewee.getIntervieweeId());
+	public Interviewee deleInterviewee(Long id) throws IntervieweeException {
+		Optional<Interviewee> opt = ivRepo.findById(id);
 		if(opt.isEmpty()) {
 			throw new IntervieweeException("Interviewee not exist");
 		}

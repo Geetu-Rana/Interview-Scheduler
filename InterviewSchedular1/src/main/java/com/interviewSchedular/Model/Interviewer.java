@@ -1,9 +1,12 @@
 package com.interviewSchedular.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.AssertFalse;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -36,7 +39,7 @@ public class Interviewer {
 	private String addDetails;
 	
 	private String interviewerStatus;
-	
+	@JsonIgnore
 	private Boolean deleteStatus;
 	
 }

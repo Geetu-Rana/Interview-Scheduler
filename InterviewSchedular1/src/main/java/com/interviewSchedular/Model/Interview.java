@@ -47,7 +47,7 @@ public class Interview {
 	
 	@OneToMany
 	@JoinColumn(name = "candidate_Id")
-	@JsonIgnore
+	//@JsonIgnore
 	private Set<Interviewee> interviewees;
 	
 	
